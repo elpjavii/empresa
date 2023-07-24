@@ -87,4 +87,23 @@ public class EmpleadoDAO {
 		}
 		return res;
 	}
+	public int eliminarEmpleado(int codEmpleado) throws SQLException {
+		int res = 0;
+		y = this.conexion.getConexion();
+		try {
+			String consulta = "delete from empleados where cod_empleado = ?";
+			sentencia = y.prepareStatement(consulta);
+			// inicializamos la sentencia indicando valor que sustitulle a cada ?"
+			sententia_preparada = y.prepareStatement(consulta);
+			
+			sententia_preparada.setInt(1, codEmpleado);
+			
+			
+			res = sententia_preparada.executeUpdate();
+		}catch(SQLException e1) {
+			System.out.println("Error al insertar "+ e1.getMessage());
+			throw e1;
+		}
+		return res;
+	}
 }

@@ -3,10 +3,12 @@ package GUI;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -90,6 +92,32 @@ public class Main_Gui extends JFrame {
 			}
 		});
 		contentPane.add(insertar, "cell 0 1");
+		
+		JButton btnEliminar = new JButton("eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				eliminarEmpleado();
+			}
+		});
+		contentPane.add(btnEliminar, "cell 0 1");
+	}
+
+	protected void eliminarEmpleado() {
+		int seleccionada = table.getSelectedRow();
+		if (seleccionada < 0) {
+			JOptionPane.showMessageDialog(contentPane, "debe seleccionar una fila");
+		}else {
+			int codEmpleado = (int) table.getValueAt(seleccionada, 0);
+			EmpleadoDAO em = new EmpleadoDAO();
+			try {
+				em.eliminarEmpleado(codEmpleado);
+				cargar();
+				pulso();
+				
+			} catch (SQLException e) {
+				JOptionPane.showMessageDialog(contentPane, "error al eliminar empleado");
+			}
+		}
 	}
 
 	protected void insert() {
