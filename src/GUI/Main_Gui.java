@@ -83,7 +83,15 @@ public class Main_Gui extends JFrame {
 				
 			}
 		});
-		contentPane.add(btnNewButton, "flowx,cell 0 1,alignx center");
+		
+		JButton btnNewButton_1 = new JButton("mostrar");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mostrarEditar();
+			}
+		});
+		contentPane.add(btnNewButton_1, "flowx,cell 0 1,alignx center");
+		contentPane.add(btnNewButton, "cell 0 1,alignx center");
 		
 		JButton insertar = new JButton("insestar");
 		insertar.addActionListener(new ActionListener() {
@@ -100,6 +108,22 @@ public class Main_Gui extends JFrame {
 			}
 		});
 		contentPane.add(btnEliminar, "cell 0 1");
+	}
+
+	protected void mostrarEditar() {
+		Dialogo_Editar dialogoEdit = new Dialogo_Editar();
+		dialogoEdit.setModal(true);
+		dialogoEdit.setVisible(true);
+		
+		int seleccionada = table.getSelectedRow();
+		if (seleccionada < 0) {
+			JOptionPane.showMessageDialog(contentPane, "debe seleccionar una fila");
+		}else {
+			int codEmpleado = (int) table.getValueAt(seleccionada, 0);
+			dialogoEdit.inicializar(codEmpleado);
+			dialogoEdit.setVisible(true);
+		}
+		
 	}
 
 	protected void eliminarEmpleado() {

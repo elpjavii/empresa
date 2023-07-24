@@ -24,7 +24,7 @@ import Clases.Empleado;
 import Clases.EmpleadoDAO;
 import net.miginfocom.swing.MigLayout;
 
-public class Dialogo_insertar extends JDialog {
+public class Dialogo_Editar extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtNombre;
@@ -35,14 +35,13 @@ public class Dialogo_insertar extends JDialog {
 	private JTextField textSalario;
 	private JTextField textComision;
 	private JSpinner spinner;
-	private JTextField textIngreso;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			Dialogo_insertar dialog = new Dialogo_insertar();
+			Dialogo_Editar dialog = new Dialogo_Editar();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -53,14 +52,14 @@ public class Dialogo_insertar extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public Dialogo_insertar() {
+	public Dialogo_Editar() {
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new MigLayout("", "[][grow][][grow]", "[][][][][][]"));
 		{
-			JLabel lblNewLabel = new JLabel("insertar nuevo empleado");
+			JLabel lblNewLabel = new JLabel("editar empleado");
 			contentPanel.add(lblNewLabel, "cell 0 0 4 1,alignx center");
 		}
 		{
@@ -78,6 +77,8 @@ public class Dialogo_insertar extends JDialog {
 		}
 		{
 			textCod_Emp = new JTextField();
+			textCod_Emp.setEnabled(false);
+			textCod_Emp.setEditable(false);
 			contentPanel.add(textCod_Emp, "cell 1 2,growx");
 			textCod_Emp.setColumns(10);
 		}
@@ -136,11 +137,6 @@ public class Dialogo_insertar extends JDialog {
 			contentPanel.add(spinner, "cell 1 5");
 		}
 		{
-			textIngreso = new JTextField();
-			contentPanel.add(textIngreso, "cell 3 5,growx");
-			textIngreso.setColumns(10);
-		}
-		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
@@ -190,9 +186,9 @@ public class Dialogo_insertar extends JDialog {
 			Double comision = Double.parseDouble(textComision.getText());
 			int n_hijos = (int) spinner.getValue();
 			
-			Date fechaIngreso = Date.valueOf(LocalDate.parse(textIngreso.getText(), formateador));
+			LocalDate fecha_ac = LocalDate.now();
 			
-			Empleado e = new Empleado(cod_emp, cod_dep, tlf, fechaIngreso ,fechaNac, salario, comision, n_hijos, nombre);
+			Empleado e = new Empleado(cod_emp, cod_dep, tlf, Date.valueOf(fecha_ac) ,fechaNac, salario, comision, n_hijos, nombre);
 			EmpleadoDAO daoEmp = new EmpleadoDAO();
 			daoEmp.insertar(e);
 		} catch(SQLException e1) {
@@ -204,6 +200,20 @@ public class Dialogo_insertar extends JDialog {
 		}
 		
 		
+	}
+	
+	public void inicializar(int codEmp) {
+		EmpleadoDAO daoEmp = new EmpleadoDAO();
+		Empleado emp = daoEmp.getEmpleado(codEmp);
+		
+		txtNombre.setText(emp.getNombre());
+		textCod_Emp.setText(""+emp.getCodEmp());
+		textCod_Dep.setText(""+emp.getCodDpto());
+		texttlf.setText(""+emp.getTlf());
+		textFech_Nac.setText(""+emp.getFechaNaci());
+		textSalario.setText(""+emp.getSalario());
+		textComision.setText(""+emp.getComision());
+		spinner.setValue(emp.getNumHijos());
 	}
 
 }
